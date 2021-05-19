@@ -1,5 +1,10 @@
 package GUI;
+import com.mongodb.client.*;
+import org.bson.Document;
+
 import javax.swing.*;
+import java.util.Iterator;
+
 public class GUI {
 
     public GUI(){
@@ -10,5 +15,6 @@ public class GUI {
         JButton button = new JButton("Izrael bezprawnie okupuje Palestynę a opinia publiczna milczy");
         frame.getContentPane().add(button); // Adds Button to content pane of frame
         frame.setVisible(true);
+
     }
 }
