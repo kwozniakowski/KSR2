@@ -15,6 +15,7 @@ public class GUI {
         JButton button = new JButton("Izrael bezprawnie okupuje Palestynę a opinia publiczna milczy");
         frame.getContentPane().add(button); // Adds Button to content pane of frame
         frame.setVisible(true);
-
+        DataParser dataParser = new DataParser();
+        dataParser.parse();
     }
 }
