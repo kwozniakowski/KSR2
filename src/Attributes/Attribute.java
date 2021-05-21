@@ -2,24 +2,6 @@ package Attributes;
 
 import Memberships.TrapezoidMembership;
 
-import com.mongodb.*;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.model.Filters;
-
-import com.mongodb.client.model.UpdateOptions;
-import com.mongodb.client.result.*;
-import org.bson.Document;
-import org.bson.types.ObjectId;
-
-import java.util.List;
-import java.util.Arrays;
-import java.util.ArrayList;
-
-import static com.mongodb.client.model.Filters.*;
-import static com.mongodb.client.model.Updates.*;
 import java.util.ArrayList;
 
 public class Attribute {
@@ -27,20 +9,16 @@ public class Attribute {
     private ArrayList<TrapezoidMembership> trapezoidMemberships;
     private ArrayList<Value> values;
 
-    public Attribute(String name, ArrayList<TrapezoidMembership> trapezoidMemberships)
+    public Attribute(String name, ArrayList<Value> values, ArrayList<TrapezoidMembership> trapezoidMemberships)
     {
         this.trapezoidMemberships = trapezoidMemberships;
         this.name = name;
-        parseValues();
+        this.values = values;
+        setLabels();
     }
 
-    private void parseValues()
+    public void setLabels()
     {
-        //TODO: connection with database and parse values
-
-        MongoClient mongoClient = MongoClients.create();
-        MongoDatabase database = mongoClient.getDatabase("KSR");
-        MongoCollection<Document> collection = database.getCollection("matches");
         //on the bottom we set labels
         for(Value v:values)
         {

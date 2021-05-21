@@ -1,7 +1,6 @@
 package Memberships;
 
 public class TriangularMembership extends Membership {
-    private String name;
 
     public TriangularMembership(String name, float a, float b, float c, float d)
     {
