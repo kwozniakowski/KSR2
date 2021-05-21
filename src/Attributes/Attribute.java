@@ -1,5 +1,6 @@
 package Attributes;
 
+import Memberships.Membership;
 import Memberships.TrapezoidMembership;
 
 import java.util.ArrayList;
@@ -8,10 +9,13 @@ public class Attribute {
     private String name;
     private ArrayList<TrapezoidMembership> trapezoidMemberships;
     private ArrayList<Value> values;
+    private ArrayList<String> possibleLabels;
 
     public Attribute(String name, ArrayList<Value> values, ArrayList<TrapezoidMembership> trapezoidMemberships)
     {
         this.trapezoidMemberships = trapezoidMemberships;
+        possibleLabels = new ArrayList<>();
+        for(TrapezoidMembership m: trapezoidMemberships) possibleLabels.add(m.getName());
         this.name = name;
         this.values = values;
         setLabels();
@@ -42,4 +46,6 @@ public class Attribute {
     {
         return values;
     }
+    public ArrayList<String> getPossibleLabels() {return possibleLabels;}
+    public String getName(){return name;}
 }

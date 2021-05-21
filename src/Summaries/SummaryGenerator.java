@@ -10,16 +10,30 @@ public class SummaryGenerator {
     private ArrayList<Attribute> attributes;
     private Quantifier relativeQuantifier;
     private Quantifier absoluteQuantifier;
-    public SummaryGenerator()
+    public SummaryGenerator(ArrayList<Attribute> attributes, Quantifier relativeQuantifier)
     {
-
+        this.attributes = attributes;
+        this.relativeQuantifier = relativeQuantifier;
     }
 
     public void generate()
     {
-        for(Value v: attributes.get(0).getValues())
+        for(Attribute a : attributes)
         {
-            //TODO: the whole summary generating algorithm
+            int length = a.getValues().size();
+            for(String label: a.getPossibleLabels())
+            {
+                int counter = 0;
+                for(Value v:a.getValues())
+                {
+                    if(v.getLabel() == label)
+                    {
+                        counter = counter + 1;
+                    }
+                }
+                String linguisticDegree = relativeQuantifier.setLinguisticDegree((float)counter/length);
+                System.out.println(linguisticDegree + " " + a.getName() + " był " +label);
+            }
         }
     }
 }

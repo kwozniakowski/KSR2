@@ -55,7 +55,6 @@ public class DataParser {
             }
             catch (Exception e)
             {
-                System.out.println("ni ma");
             }
 
         });
@@ -97,10 +96,10 @@ public class DataParser {
         memberships.get(1).add(new TrapezoidMembership("Niski",88, 104, 160, 200));
         memberships.get(1).add(new TrapezoidMembership("Bardzo niski",180, 210, 2101, 2200));
         //wiek zwyciezcy
-        memberships.get(2).add(new TrapezoidMembership("Bardzo mlody",16, (float) 16.52,18, 19));
+        memberships.get(2).add(new TrapezoidMembership("Bardzo mlody",10, 16.52f,18, 19));
         memberships.get(2).add(new TrapezoidMembership("Mlody",18,19,22,25));
         memberships.get(2).add(new TrapezoidMembership("W srednim wieku",23,26,31,34));
-        memberships.get(2).add(new TrapezoidMembership("Stary",32,35, (float) 37.24, 39));
+        memberships.get(2).add(new TrapezoidMembership("Stary",32,35,  37.24f, 39));
         //liczba asow zwyciezcy
         memberships.get(3).add(new TrapezoidMembership("Mało",-1, 0, 6, 9 ));
         memberships.get(3).add(new TrapezoidMembership("Srednio",8, 11, 17, 20));
