@@ -3,9 +3,10 @@ package Attributes;
 public class Value {
     private float value;
     private String label;
-
-    public Value(float value) {
+    private String id;
+    public Value(float value, String id) {
         this.value = value;
+        this.id = id;
     }
 
     public void setLabel(String label)
@@ -20,4 +21,5 @@ public class Value {
     public String getLabel() {
         return label;
     }
+    public String getId() {return id;}
 }

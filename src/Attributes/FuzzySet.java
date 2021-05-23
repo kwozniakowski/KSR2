@@ -5,13 +5,13 @@ import Memberships.TrapezoidMembership;
 
 import java.util.ArrayList;
 
-public class Attribute {
+public class FuzzySet {
     private String name;
     private ArrayList<TrapezoidMembership> trapezoidMemberships;
     private ArrayList<Value> values;
     private ArrayList<String> possibleLabels;
 
-    public Attribute(String name, ArrayList<Value> values, ArrayList<TrapezoidMembership> trapezoidMemberships)
+    public FuzzySet(String name, ArrayList<Value> values, ArrayList<TrapezoidMembership> trapezoidMemberships)
     {
         this.trapezoidMemberships = trapezoidMemberships;
         possibleLabels = new ArrayList<>();

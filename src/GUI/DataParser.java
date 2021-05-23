@@ -1,27 +1,20 @@
 package GUI;
-import Attributes.Attribute;
+import Attributes.FuzzySet;
 import Attributes.Value;
-import Memberships.Membership;
 import Memberships.TrapezoidMembership;
 import org.json.*;
-import com.mongodb.*;
 import com.mongodb.client.*;
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.model.Aggregates;
-import com.mongodb.client.model.Projections;
 import org.bson.Document;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.jar.Attributes;
 
 public class DataParser {
 
     public DataParser(){};
-    public ArrayList<Attribute> parse()
+    public ArrayList<FuzzySet> parse()
     {
-        ArrayList<Attribute> attributes = new ArrayList<>();
+        ArrayList<FuzzySet> fuzzySets = new ArrayList<>();
         ArrayList<Value> winner_rank_values = new ArrayList<>();
         ArrayList<Value> loser_rank_values = new ArrayList<>();
         ArrayList<Value> winner_age_values = new ArrayList<>();
@@ -32,7 +25,6 @@ public class DataParser {
         ArrayList<Value> first_serve_values = new ArrayList<>();
         ArrayList<Value> winner_height_values = new ArrayList<>();
         ArrayList<Value> match_length_values = new ArrayList<>();
-
         MongoClient mongoClient = MongoClients.create("mongodb+srv://user:user@maincluster.kqq8z.mongodb.net/KSR2?retryWrites=true&w=majority");
         MongoCollection<Document> collection = mongoClient.getDatabase("KSR2").getCollection("matches");
         List<Document> matches = collection.find().into(new ArrayList<>());
@@ -42,16 +34,16 @@ public class DataParser {
             String jsonString = d.toJson();
             JSONObject obj = new JSONObject(jsonString);
             try{
-                winner_rank_values.add(new Value(obj.getInt("winner_rank")));
-                loser_rank_values.add(new Value(obj.getInt("loser_rank")));
-                winner_age_values.add(new Value(obj.getInt("winner_age")));
-                winner_aces_values.add(new Value(obj.getInt("w_ace")));
-                loser_aces_values.add(new Value(obj.getInt("l_ace")));
-                winner_df_values.add(new Value(obj.getInt("w_df")));
-                loser_df_values.add(new Value(obj.getInt("l_df")));
-                first_serve_values.add(new Value(obj.getInt("w_1stIn") / obj.getInt("w_svpt") * 100));
-                winner_height_values.add(new Value(obj.getInt("winner_ht")));
-                match_length_values.add(new Value(obj.getInt("minutes")));
+                winner_rank_values.add(new Value(obj.getInt("winner_rank"), obj.getJSONObject("_id").getString("$oid")));
+                loser_rank_values.add(new Value(obj.getInt("loser_rank"), obj.getJSONObject("_id").getString("$oid")));
+                winner_age_values.add(new Value(obj.getInt("winner_age"), obj.getJSONObject("_id").getString("$oid")));
+                winner_aces_values.add(new Value(obj.getInt("w_ace"), obj.getJSONObject("_id").getString("$oid")));
+                loser_aces_values.add(new Value(obj.getInt("l_ace"), obj.getJSONObject("_id").getString("$oid")));
+                winner_df_values.add(new Value(obj.getInt("w_df"), obj.getJSONObject("_id").getString("$oid")));
+                loser_df_values.add(new Value(obj.getInt("l_df"), obj.getJSONObject("_id").getString("$oid")));
+                first_serve_values.add(new Value((float)obj.getInt("w_1stIn") / obj.getInt("w_svpt") * 100, obj.getJSONObject("_id").getString("$oid")));
+                winner_height_values.add(new Value(obj.getInt("winner_ht"), obj.getJSONObject("_id").getString("$oid")));
+                match_length_values.add(new Value(obj.getInt("minutes"), obj.getJSONObject("_id").getString("$oid")));
             }
             catch (Exception e)
             {
@@ -61,19 +53,19 @@ public class DataParser {
 
 
 
-        attributes.add(new Attribute("Ranking zwyciezcy",winner_rank_values,getMemberships().get(0)));
-        attributes.add(new Attribute("Ranking przegranego",loser_rank_values,getMemberships().get(1)));
-        attributes.add(new Attribute("Wiek zwyciezcy",winner_age_values,getMemberships().get(2)));
-        attributes.add(new Attribute("Liczba asow zwyciezcy",winner_aces_values,getMemberships().get(3)));
-        attributes.add(new Attribute("Liczba DF zwyciezcy",winner_df_values,getMemberships().get(5)));
-        attributes.add(new Attribute("Liczba asow przegranego",loser_aces_values,getMemberships().get(4)));
-        attributes.add(new Attribute("Liczba DF przegranego",loser_df_values,getMemberships().get(6)));
-        attributes.add(new Attribute("Procent pierwszego serwisu zwyciezcy",first_serve_values,getMemberships().get(7)));
-        attributes.add(new Attribute("Wzrost zwyciezcy",winner_height_values,getMemberships().get(8)));
-        attributes.add(new Attribute("Dlugosc meczu",match_length_values,getMemberships().get(9)));
+        fuzzySets.add(new FuzzySet("Ranking zwyciezcy",winner_rank_values,getMemberships().get(0)));
+        fuzzySets.add(new FuzzySet("Ranking przegranego",loser_rank_values,getMemberships().get(1)));
+        fuzzySets.add(new FuzzySet("Wiek zwyciezcy",winner_age_values,getMemberships().get(2)));
+        fuzzySets.add(new FuzzySet("Liczba asow zwyciezcy",winner_aces_values,getMemberships().get(3)));
+        fuzzySets.add(new FuzzySet("Liczba DF zwyciezcy",winner_df_values,getMemberships().get(5)));
+        fuzzySets.add(new FuzzySet("Liczba asow przegranego",loser_aces_values,getMemberships().get(4)));
+        fuzzySets.add(new FuzzySet("Liczba DF przegranego",loser_df_values,getMemberships().get(6)));
+        fuzzySets.add(new FuzzySet("Procent pierwszego serwisu zwyciezcy",first_serve_values,getMemberships().get(7)));
+        fuzzySets.add(new FuzzySet("Wzrost zwyciezcy",winner_height_values,getMemberships().get(8)));
+        fuzzySets.add(new FuzzySet("Dlugosc meczu",match_length_values,getMemberships().get(9)));
 
 
-        return attributes;
+        return fuzzySets;
     }
     public ArrayList<ArrayList<TrapezoidMembership>> getMemberships()
     {
