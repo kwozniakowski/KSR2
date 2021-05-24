@@ -1,6 +1,8 @@
 package GUI;
+import Attributes.Attribute;
 import Attributes.FuzzySet;
 import Attributes.Value;
+import Memberships.Membership;
 import Memberships.TrapezoidMembership;
 import org.json.*;
 import com.mongodb.client.*;
@@ -12,9 +14,9 @@ import java.util.List;
 public class DataParser {
 
     public DataParser(){};
-    public ArrayList<FuzzySet> parse()
+    public ArrayList<Attribute> parse()
     {
-        ArrayList<FuzzySet> fuzzySets = new ArrayList<>();
+        ArrayList<Attribute> attributes = new ArrayList<>();
         ArrayList<Value> winner_rank_values = new ArrayList<>();
         ArrayList<Value> loser_rank_values = new ArrayList<>();
         ArrayList<Value> winner_age_values = new ArrayList<>();
@@ -41,7 +43,7 @@ public class DataParser {
                 loser_aces_values.add(new Value(obj.getInt("l_ace"), obj.getJSONObject("_id").getString("$oid")));
                 winner_df_values.add(new Value(obj.getInt("w_df"), obj.getJSONObject("_id").getString("$oid")));
                 loser_df_values.add(new Value(obj.getInt("l_df"), obj.getJSONObject("_id").getString("$oid")));
-                first_serve_values.add(new Value((float)obj.getInt("w_1stIn") / obj.getInt("w_svpt") * 100, obj.getJSONObject("_id").getString("$oid")));
+                first_serve_values.add(new Value((float) obj.getInt("w_1stIn") / (float) obj.getInt("w_svpt") * 100, obj.getJSONObject("_id").getString("$oid")));
                 winner_height_values.add(new Value(obj.getInt("winner_ht"), obj.getJSONObject("_id").getString("$oid")));
                 match_length_values.add(new Value(obj.getInt("minutes"), obj.getJSONObject("_id").getString("$oid")));
             }
@@ -53,23 +55,23 @@ public class DataParser {
 
 
 
-        fuzzySets.add(new FuzzySet("Ranking zwyciezcy",winner_rank_values,getMemberships().get(0)));
-        fuzzySets.add(new FuzzySet("Ranking przegranego",loser_rank_values,getMemberships().get(1)));
-        fuzzySets.add(new FuzzySet("Wiek zwyciezcy",winner_age_values,getMemberships().get(2)));
-        fuzzySets.add(new FuzzySet("Liczba asow zwyciezcy",winner_aces_values,getMemberships().get(3)));
-        fuzzySets.add(new FuzzySet("Liczba DF zwyciezcy",winner_df_values,getMemberships().get(5)));
-        fuzzySets.add(new FuzzySet("Liczba asow przegranego",loser_aces_values,getMemberships().get(4)));
-        fuzzySets.add(new FuzzySet("Liczba DF przegranego",loser_df_values,getMemberships().get(6)));
-        fuzzySets.add(new FuzzySet("Procent pierwszego serwisu zwyciezcy",first_serve_values,getMemberships().get(7)));
-        fuzzySets.add(new FuzzySet("Wzrost zwyciezcy",winner_height_values,getMemberships().get(8)));
-        fuzzySets.add(new FuzzySet("Dlugosc meczu",match_length_values,getMemberships().get(9)));
+        attributes.add(new Attribute("Ranking zwyciezcy",winner_rank_values,getMemberships().get(0)));
+        attributes.add(new Attribute("Ranking przegranego",loser_rank_values,getMemberships().get(1)));
+        attributes.add(new Attribute("Wiek zwyciezcy",winner_age_values,getMemberships().get(2)));
+        attributes.add(new Attribute("Liczba asow zwyciezcy",winner_aces_values,getMemberships().get(3)));
+        attributes.add(new Attribute("Liczba DF zwyciezcy",winner_df_values,getMemberships().get(5)));
+        attributes.add(new Attribute("Liczba asow przegranego",loser_aces_values,getMemberships().get(4)));
+        attributes.add(new Attribute("Liczba DF przegranego",loser_df_values,getMemberships().get(6)));
+        attributes.add(new Attribute("Procent pierwszego serwisu zwyciezcy",first_serve_values,getMemberships().get(7)));
+        attributes.add(new Attribute("Wzrost zwyciezcy",winner_height_values,getMemberships().get(8)));
+        attributes.add(new Attribute("Dlugosc meczu",match_length_values,getMemberships().get(9)));
 
 
-        return fuzzySets;
+        return attributes;
     }
-    public ArrayList<ArrayList<TrapezoidMembership>> getMemberships()
+    public ArrayList<ArrayList<Membership>> getMemberships()
     {
-        ArrayList<ArrayList<TrapezoidMembership>> memberships = new ArrayList<>();
+        ArrayList<ArrayList<Membership>> memberships = new ArrayList<>();
 
         for(int i = 0; i < 10; i++)
         {

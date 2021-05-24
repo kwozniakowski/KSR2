@@ -1,61 +1,106 @@
 package Summaries;
 
+import Attributes.Attribute;
 import Attributes.FuzzySet;
 import Attributes.Value;
+import GUI.DataParser;
+import Memberships.Membership;
+import Memberships.TrapezoidMembership;
+import Memberships.TriangularMembership;
 import Qualifiers.Qualifier;
 import Quantifiers.Quantifier;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class SummaryGenerator {
-    private ArrayList<FuzzySet> fuzzySets;
+    private ArrayList<Attribute> attributes;
+    private String attribute;
     private Quantifier relativeQuantifier;
     private Quantifier absoluteQuantifier;
     private Qualifier qualifier;
-    public SummaryGenerator(ArrayList<FuzzySet> fuzzySets, Quantifier relativeQuantifier
-            , Quantifier absoluteQuantifier, Qualifier qualifier)
+    private String summarizer;
+    private boolean generalMode;
+
+    public SummaryGenerator(String attribute, Qualifier qualifier, String summarizer, boolean generalMode
+    ,ArrayList<Attribute> attributes,Quantifier relativeQuantifier,Quantifier absoluteQuantifier)
     {
-        this.fuzzySets = fuzzySets;
-        this.relativeQuantifier = relativeQuantifier;
-        this.absoluteQuantifier = absoluteQuantifier;
+        this.generalMode = generalMode;
         this.qualifier = qualifier;
+        this.summarizer = summarizer;
+        this.attribute = attribute;
+        this.attributes = attributes;
+        this.relativeQuantifier =relativeQuantifier;
+        this.absoluteQuantifier = absoluteQuantifier;
+        setQualifier();
     }
 
     public void generateFirstFormSummary()
     {
-        for(FuzzySet a : fuzzySets)
+        if(generalMode)
         {
-            int length = a.getValues().size();
-            for(String label: a.getPossibleLabels())
+            for(Attribute a : attributes)
             {
-                int counter = 0;
-                for(Value v:a.getValues())
+                for(FuzzySet f: a.getFuzzySets())
                 {
-                    if(v.getLabel() == label)
-                    {
-                        counter = counter + 1;
-                    }
+                    String linguisticDegree = relativeQuantifier.setLinguisticDegree((float)f.getValues().size()/a.getValues().size());
+                    System.out.println("W " + linguisticDegree + " meczów " + a.getName() + " był " + f.getName());
                 }
-                String linguisticDegree = relativeQuantifier.setLinguisticDegree((float)counter/length);
-                System.out.println("W " + linguisticDegree + " meczów " + a.getName() + " był " +label);
+            }
+            for(Attribute a : attributes)
+            {
+                for(FuzzySet f: a.getFuzzySets())
+                {
+                    if(f.getName().equals(summarizer))
+                    {
+                        String linguisticDegree = absoluteQuantifier.setLinguisticDegree((float) f.getValues().size());
+                        System.out.println("W " + linguisticDegree + " meczach " + a.getName() + " był " + f.getName());
+                    }
+
+                }
             }
         }
-        for(FuzzySet a : fuzzySets)
+        else
         {
-            int length = a.getValues().size();
-            for(String label: a.getPossibleLabels())
+            for(Attribute a : attributes)
             {
-                int counter = 0;
-                for(Value v:a.getValues())
+                if(a.getName() == attribute)
                 {
-                    if(v.getLabel() == label)
+                    for(FuzzySet f: a.getFuzzySets())
                     {
-                        counter = counter + 1;
+                        if(summarizer == "Brak")
+                        {
+                            String linguisticDegree = relativeQuantifier.setLinguisticDegree((float)f.getValues().size()/a.getValues().size());
+                            System.out.println("W " + linguisticDegree + " meczów " + a.getName() + " był " + f.getName());
+                        }
+                        else if(summarizer == f.getName())
+                        {
+                            String linguisticDegree = relativeQuantifier.setLinguisticDegree((float)f.getValues().size()/a.getValues().size());
+                            System.out.println("W " + linguisticDegree + " meczów " + a.getName() + " był " + f.getName());
+                        }
+
                     }
                 }
-                String linguisticDegree = absoluteQuantifier.setLinguisticDegree((float)counter);
-                System.out.println("W " + linguisticDegree + " meczach " + a.getName() + " był " +label);
+
+            }
+            for(Attribute a : attributes)
+            {
+                if(a.getName() == attribute)
+                {
+                    for(FuzzySet f: a.getFuzzySets())
+                    {
+                        if(summarizer == "Brak")
+                        {
+                            String linguisticDegree = absoluteQuantifier.setLinguisticDegree((float)f.getValues().size());
+                            System.out.println("W " + linguisticDegree + " meczów " + a.getName() + " był " + f.getName());
+                        }
+                        else if(summarizer == f.getName())
+                        {
+                            String linguisticDegree = absoluteQuantifier.setLinguisticDegree((float)f.getValues().size());
+                            System.out.println("W " + linguisticDegree + " meczów " + a.getName() + " był " + f.getName());
+                        }
+                    }
+                }
+
             }
         }
 
@@ -63,50 +108,84 @@ public class SummaryGenerator {
     public void generateSecondFormSummary()
     {
         qualifier.qualify();
-        for(FuzzySet a : fuzzySets)
+        for(Attribute a : attributes)
         {
             int length = qualifier.getIdsOfQualifiedValues().size();
-            for(String label: a.getPossibleLabels())
+            if(a.getName().equals(attribute))
             {
-                int counter = 0;
-                for(Value v:a.getValues())
+                for(FuzzySet f: a.getFuzzySets())
                 {
-                    if(v.getLabel() == label)
+                    int counter = 0;
+                    if(summarizer == "Brak")
                     {
-                        if((qualifier.getIdsOfQualifiedValues()).contains(v.getId()))
+                        for(Value v:a.getValues())
                         {
-                            counter = counter + 1;
+                            if((qualifier.getIdsOfQualifiedValues()).contains(v.getId()))
+                            {
+                                counter = counter + 1;
+                            }
                         }
                     }
+                    else if(summarizer == f.getName())
+                    {
+                        for(Value v:a.getValues())
+                        {
+                            if((qualifier.getIdsOfQualifiedValues()).contains(v.getId()))
+                            {
+                                counter = counter + 1;
+                            }
+                        }
+                    }
+                    String linguisticDegree = relativeQuantifier.setLinguisticDegree((float)counter/length);
+                    System.out.println("W " + linguisticDegree + " meczów, w ktorych "
+                            + qualifier.getAttribute().getName() + " był " + qualifier.getLabel() +", "
+                            + a.getName() + " był " + f.getName());
                 }
-                String linguisticDegree = relativeQuantifier.setLinguisticDegree((float)counter/length);
-                System.out.println("W " + linguisticDegree + " meczów, w ktorych "
-                        + qualifier.getFuzzySet().getName() + " był " + qualifier.getLabel() +", "
-                        + a.getName() + " był " +label);
             }
+
         }
-        for(FuzzySet a : fuzzySets)
+        for(Attribute a : attributes)
         {
-            int length = a.getValues().size();
-            for(String label: a.getPossibleLabels())
+            if(a.getName().equals(attribute))
             {
-                int counter = 0;
-                for(Value v:a.getValues())
+                for(FuzzySet f: a.getFuzzySets())
                 {
-                    if(v.getLabel() == label)
+                    int counter = 0;
+                    if(summarizer == "Brak")
                     {
-                        if((qualifier.getIdsOfQualifiedValues()).contains(v.getId()))
+                        for(Value v:f.getValues())
                         {
-                            counter = counter + 1;
+                            if((qualifier.getIdsOfQualifiedValues()).contains(v.getId()))
+                            {
+                                counter = counter + 1;
+                            }
                         }
                     }
+                    else if(summarizer == f.getName())
+                    {
+                        for(Value v:f.getValues())
+                        {
+                            if((qualifier.getIdsOfQualifiedValues()).contains(v.getId()))
+                            {
+                                counter = counter + 1;
+                            }
+                        }
+                    }
+                    String linguisticDegree = absoluteQuantifier.setLinguisticDegree((float)counter);
+                    System.out.println("W " + linguisticDegree + " meczów, w ktorych "
+                            + qualifier.getAttribute().getName() + " był " + qualifier.getLabel() +", "
+                            + a.getName() + " był " + f.getName());
                 }
-                String linguisticDegree = absoluteQuantifier.setLinguisticDegree((float)counter);
-                System.out.println("W " + linguisticDegree + " meczach, w ktorych "
-                        + qualifier.getFuzzySet().getName() + " był " + qualifier.getLabel() +", "
-                        + a.getName() + " był " +label);
             }
+
         }
+
+    }
+
+
+
+    public void setQualifier()
+    {
 
     }
 }

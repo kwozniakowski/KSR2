@@ -28,4 +28,9 @@ public class Quantifier {
         }
         return linguisticDegree;
     }
+
+    public ArrayList<Membership> getMemberships()
+    {
+        return memberships;
+    }
 }

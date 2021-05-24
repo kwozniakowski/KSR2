@@ -1,5 +1,6 @@
 package Qualifiers;
 
+import Attributes.Attribute;
 import Attributes.FuzzySet;
 import Attributes.Value;
 
@@ -7,29 +8,28 @@ import java.util.ArrayList;
 
 public class Qualifier {
     private ArrayList<String> idsOfQualifiedValues;
-    private FuzzySet fuzzySet;
+    private Attribute attribute;
     private String label;
 
-    public Qualifier(FuzzySet fuzzySet,String name)
+    public Qualifier(Attribute attribute, String label)
     {
-        this.label = name;
-        this.fuzzySet = fuzzySet;
+        this.attribute = attribute;
+        this.label = label;
         this.idsOfQualifiedValues = new ArrayList<>();
     }
 
     public void qualify()
     {
-        for(Value v: fuzzySet.getValues())
+        for(FuzzySet f: attribute.getFuzzySets())
         {
-            if(v.getLabel() == label)
+            if(f.getName().equals(label))
             {
-                idsOfQualifiedValues.add(v.getId());
+                for(Value v: f.getValues())
+                {
+                    idsOfQualifiedValues.add(v.getId());
+                }
             }
         }
-    }
-
-    public FuzzySet getFuzzySet() {
-        return fuzzySet;
     }
 
     public ArrayList<String> getIdsOfQualifiedValues()
@@ -37,5 +37,11 @@ public class Qualifier {
         return idsOfQualifiedValues;
     }
 
-    public String getLabel() {return label;}
+    public Attribute getAttribute() {
+        return attribute;
+    }
+
+    public String getLabel() {
+        return label;
+    }
 }
