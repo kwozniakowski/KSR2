@@ -50,12 +50,8 @@ public class SummaryGenerator {
             {
                 for(FuzzySet f: a.getFuzzySets())
                 {
-                    if(f.getName().equals(summarizer))
-                    {
                         String linguisticDegree = absoluteQuantifier.setLinguisticDegree((float) f.getValues().size());
                         System.out.println("W " + linguisticDegree + " meczach " + a.getName() + " był " + f.getName());
-                    }
-
                 }
             }
         }
@@ -118,7 +114,7 @@ public class SummaryGenerator {
                     int counter = 0;
                     if(summarizer == "Brak")
                     {
-                        for(Value v:a.getValues())
+                        for(Value v:f.getValues())
                         {
                             if((qualifier.getIdsOfQualifiedValues()).contains(v.getId()))
                             {
@@ -128,7 +124,7 @@ public class SummaryGenerator {
                     }
                     else if(summarizer == f.getName())
                     {
-                        for(Value v:a.getValues())
+                        for(Value v:f.getValues())
                         {
                             if((qualifier.getIdsOfQualifiedValues()).contains(v.getId()))
                             {
@@ -186,6 +182,7 @@ public class SummaryGenerator {
 
     public void setQualifier()
     {
+
 
     }
 }

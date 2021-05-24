@@ -71,7 +71,7 @@ public class GUI {
                     }
                 }
                 Qualifier qualifier = new Qualifier(attributeToSend,
-                        (String) qualifierSubjectLabelCB.getSelectedItem());
+                        (String) qualifierSubjectLabelCB.getSelectedItem().toString());
                 String attribute = attributesCB.getSelectedItem().toString();
                 String summarizer = summarizerCB.getSelectedItem().toString();
                 SummaryGenerator summaryGenerator = new SummaryGenerator(attribute, qualifier, summarizer, generalModeRB.isSelected(),
@@ -98,6 +98,7 @@ public class GUI {
                     {
                         model.addElement(s);
                     }
+                    model.addElement("Brak");
                     summarizerCB.setModel(model);
                 }
 
