@@ -21,6 +21,7 @@ public class GUI {
     private JFrame frame;
     private JPanel panel;
     private JButton button1;
+    private JButton button2;
     private JComboBox qualifierSubjectCB;
     private JComboBox attributesCB;
     private JComboBox summarizerCB;
@@ -34,7 +35,8 @@ public class GUI {
         setQuantifiers();
         this.frame = new JFrame();
         this.panel = new JPanel();
-        this.button1 = new JButton("Generate");
+        this.button1 = new JButton("Generate 1st form");
+        this.button2 = new JButton("Generate 2nd form");
         this.generalModeRB = new JRadioButton();
         setComboBoxes();
 
@@ -47,11 +49,15 @@ public class GUI {
         panel.add(attributesCB);
         panel.add(new JLabel("Wybierz sumaryzator:"));
         panel.add(summarizerCB);
+        panel.add(button1);
+        panel.add(new JLabel("Przydatne do podsumowań w drugiej formie:"));
         panel.add(new JLabel("Wybierz atrybut kwalifikujący:"));
         panel.add(qualifierSubjectCB);
         panel.add(new JLabel("Wybierz etykietę atrybutu kwalifikującego:"));
         panel.add(qualifierSubjectLabelCB);
-        panel.add(button1);
+        panel.add(button2);
+        JLabel resultText = new JLabel("");
+        panel.add(resultText);
 
         frame.add(panel, BorderLayout.CENTER);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -62,15 +68,29 @@ public class GUI {
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String attribute = attributesCB.getSelectedItem().toString();
+                String summarizer = summarizerCB.getSelectedItem().toString();
+                SummaryGenerator summaryGenerator = new SummaryGenerator(attribute, summarizer, generalModeRB.isSelected(),
+                        attributes, relativeQuantifier, absoluteQuantifier);
+                ArrayList<String> results1 = summaryGenerator.generateFirstFormSummary();
+                String result = "";
+                for(String s: results1) result = result + s + "\n";
+                resultText.setText(result);
+            }
+        });
+        button2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 Qualifier qualifier = new Qualifier((String) qualifierSubjectCB.getSelectedItem().toString(),
                         (String) qualifierSubjectLabelCB.getSelectedItem().toString(), attributes);
                 String attribute = attributesCB.getSelectedItem().toString();
                 String summarizer = summarizerCB.getSelectedItem().toString();
-                SummaryGenerator summaryGenerator = new SummaryGenerator(attribute, qualifier, summarizer, generalModeRB.isSelected(),
+                SummaryGenerator summaryGenerator = new SummaryGenerator(attribute, summarizer, generalModeRB.isSelected(),
                         attributes, relativeQuantifier, absoluteQuantifier);
-                summaryGenerator.generateFirstFormSummary();
-                summaryGenerator.generateSecondFormSummary();
-
+                ArrayList<String> results2 = summaryGenerator.generateSecondFormSummary(qualifier);
+                String result = "";
+                for(String s: results2) result = result + s + "\n";
+                resultText.setText(result);
             }
         });
 
@@ -102,17 +122,20 @@ public class GUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ArrayList<String> summarizatorList = new ArrayList<>();
-                Attribute chosenSet = attributes.get(qualifierSubjectCB.getSelectedIndex());
-                for(FuzzySet f: chosenSet.getFuzzySets())
+                if(!qualifierSubjectCB.getSelectedItem().equals("Brak"))
                 {
-                    summarizatorList.add(f.getName());
+                    Attribute chosenSet = attributes.get(qualifierSubjectCB.getSelectedIndex());
+                    for(FuzzySet f: chosenSet.getFuzzySets())
+                    {
+                        summarizatorList.add(f.getName());
+                    }
+                    DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>();
+                    for(String s: summarizatorList)
+                    {
+                        model.addElement(s);
+                    }
+                    qualifierSubjectLabelCB.setModel(model);
                 }
-                DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>();
-                for(String s: summarizatorList)
-                {
-                    model.addElement(s);
-                }
-                qualifierSubjectLabelCB.setModel(model);
 
             }
         });
