@@ -62,16 +62,8 @@ public class GUI {
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Attribute attributeToSend = attributes.get(0);
-                for(Attribute a : attributes)
-                {
-                    if(a.getName().equals(qualifierSubjectCB.getSelectedItem().toString()))
-                    {
-                        attributeToSend = a;
-                    }
-                }
-                Qualifier qualifier = new Qualifier(attributeToSend,
-                        (String) qualifierSubjectLabelCB.getSelectedItem().toString());
+                Qualifier qualifier = new Qualifier((String) qualifierSubjectCB.getSelectedItem().toString(),
+                        (String) qualifierSubjectLabelCB.getSelectedItem().toString(), attributes);
                 String attribute = attributesCB.getSelectedItem().toString();
                 String summarizer = summarizerCB.getSelectedItem().toString();
                 SummaryGenerator summaryGenerator = new SummaryGenerator(attribute, qualifier, summarizer, generalModeRB.isSelected(),

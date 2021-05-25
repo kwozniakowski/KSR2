@@ -8,27 +8,31 @@ import java.util.ArrayList;
 
 public class Qualifier {
     private ArrayList<String> idsOfQualifiedValues;
-    private Attribute attribute;
+    private String attribute;
     private String label;
+    private FuzzySet fuzzySet;
+    private ArrayList<Attribute> attributes;
 
-    public Qualifier(Attribute attribute, String label)
+    public Qualifier(String attribute, String label, ArrayList<Attribute> attributes)
     {
         this.attribute = attribute;
         this.label = label;
         this.idsOfQualifiedValues = new ArrayList<>();
-    }
-
-    public void qualify()
-    {
-        for(FuzzySet f: attribute.getFuzzySets())
+        this.attributes = attributes;
+        for(Attribute a: attributes)
         {
-            if(f.getName().equals(label))
+            if(a.getName().equals(attribute))
             {
-                for(Value v: f.getValues())
+                for(FuzzySet f: a.getFuzzySets())
                 {
-                    idsOfQualifiedValues.add(v.getId());
+                    if(f.getName().equals(label))
+                    {
+                        this.fuzzySet = f;
+                    }
+
                 }
             }
+
         }
     }
 
@@ -37,11 +41,15 @@ public class Qualifier {
         return idsOfQualifiedValues;
     }
 
-    public Attribute getAttribute() {
+    public String getAttribute() {
         return attribute;
     }
 
     public String getLabel() {
         return label;
+    }
+
+    public FuzzySet getFuzzySet() {
+        return fuzzySet;
     }
 }
