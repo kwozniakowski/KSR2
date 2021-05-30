@@ -29,6 +29,7 @@ public class Attribute {
             for(FuzzySet f : fuzzySets)
             {
                 float degree = f.getMembership().getDegree(v.getValue());
+                f.getFuzzyValues().add(new FuzzyValue(v,degree));
                 if(degree > maxDegree)
                 {
                     maxDegree = degree;

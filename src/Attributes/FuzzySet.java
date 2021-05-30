@@ -9,6 +9,7 @@ public class FuzzySet {
     private String name;
     private Membership membership;
     private ArrayList<Value> values;
+    private ArrayList<FuzzyValue> fuzzyValues;
 
 
     public FuzzySet(String name, Membership membership)
@@ -16,6 +17,7 @@ public class FuzzySet {
         this.name = name;
         this.membership = membership;
         this.values = new ArrayList<>();
+        this.fuzzyValues = new ArrayList<>();
     }
 
     public ArrayList<Value> getValues()
@@ -27,6 +29,7 @@ public class FuzzySet {
     {
         return membership;
     }
+    public ArrayList<FuzzyValue> getFuzzyValues() {return fuzzyValues;}
 
     public Set union(FuzzySet f1)
     {

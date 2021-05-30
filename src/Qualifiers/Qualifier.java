@@ -3,6 +3,7 @@ package Qualifiers;
 import Attributes.Attribute;
 import Attributes.FuzzySet;
 import Attributes.Value;
+import Memberships.Membership;
 
 import java.util.ArrayList;
 
@@ -12,6 +13,7 @@ public class Qualifier {
     private String label;
     private FuzzySet fuzzySet;
     private ArrayList<Attribute> attributes;
+    private Membership membership;
 
     public Qualifier(String attribute, String label, ArrayList<Attribute> attributes)
     {
@@ -19,6 +21,7 @@ public class Qualifier {
         this.label = label;
         this.idsOfQualifiedValues = new ArrayList<>();
         this.attributes = attributes;
+
         for(Attribute a: attributes)
         {
             if(a.getName().equals(attribute))
