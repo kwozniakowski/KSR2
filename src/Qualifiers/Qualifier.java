@@ -7,7 +7,7 @@ import Memberships.Membership;
 
 import java.util.ArrayList;
 
-public class Qualifier {
+public class Qualifier extends FuzzySet {
     private ArrayList<String> idsOfQualifiedValues;
     private String attribute;
     private String label;
@@ -15,44 +15,10 @@ public class Qualifier {
     private ArrayList<Attribute> attributes;
     private Membership membership;
 
-    public Qualifier(String attribute, String label, ArrayList<Attribute> attributes)
+    public Qualifier(String name, Membership membership)
     {
-        this.attribute = attribute;
-        this.label = label;
-        this.idsOfQualifiedValues = new ArrayList<>();
-        this.attributes = attributes;
+        super(name, membership);
 
-        for(Attribute a: attributes)
-        {
-            if(a.getName().equals(attribute))
-            {
-                for(FuzzySet f: a.getFuzzySets())
-                {
-                    if(f.getName().equals(label))
-                    {
-                        this.fuzzySet = f;
-                    }
-
-                }
-            }
-
-        }
     }
 
-    public ArrayList<String> getIdsOfQualifiedValues()
-    {
-        return idsOfQualifiedValues;
-    }
-
-    public String getAttribute() {
-        return attribute;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public FuzzySet getFuzzySet() {
-        return fuzzySet;
-    }
 }

@@ -1,36 +1,18 @@
 package Quantifiers;
 
+import Attributes.FuzzySet;
 import Memberships.Membership;
 import Memberships.TriangularMembership;
 
 import java.util.ArrayList;
 
-public class Quantifier {
-    private ArrayList<Membership> memberships;
+public class Quantifier extends FuzzySet {
+    public boolean absolute;
 
-    public Quantifier(ArrayList<Membership> memberships) {
-        this.memberships = memberships;
+    public Quantifier(String name, Membership membership, boolean absolute) {
+        super(name,membership);
+        this.absolute = absolute;
     }
 
-    public String setLinguisticDegree(float degree)
-    {
-        float maxDegree = 0;
-        String linguisticDegree = null;
-        for(Membership m:memberships)
-        {
-            float newDegree = m.getDegree(degree);
-            String newLinguisticDegree = m.getName();
-            if(newDegree > maxDegree)
-            {
-                maxDegree = newDegree;
-                linguisticDegree = newLinguisticDegree;
-            }
-        }
-        return linguisticDegree;
-    }
 
-    public ArrayList<Membership> getMemberships()
-    {
-        return memberships;
-    }
 }

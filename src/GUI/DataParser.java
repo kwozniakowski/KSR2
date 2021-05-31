@@ -1,6 +1,7 @@
 package GUI;
 import Attributes.Attribute;
 import Attributes.FuzzySet;
+import Attributes.Match;
 import Attributes.Value;
 import Memberships.Membership;
 import Memberships.TrapezoidMembership;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataParser {
-
+    ArrayList<Match> matches;
     public DataParser(){};
     public ArrayList<Attribute> parse()
     {
@@ -27,15 +28,30 @@ public class DataParser {
         ArrayList<Value> first_serve_values = new ArrayList<>();
         ArrayList<Value> winner_height_values = new ArrayList<>();
         ArrayList<Value> match_length_values = new ArrayList<>();
+        matches = new ArrayList<>();
         MongoClient mongoClient = MongoClients.create("mongodb+srv://user:user@maincluster.kqq8z.mongodb.net/KSR2?retryWrites=true&w=majority");
         MongoCollection<Document> collection = mongoClient.getDatabase("KSR2").getCollection("matches");
-        List<Document> matches = collection.find().into(new ArrayList<>());
-        matches.forEach(d ->
+        List<Document> imatches = collection.find().into(new ArrayList<>());
+        imatches.forEach(d ->
         {
 
             String jsonString = d.toJson();
             JSONObject obj = new JSONObject(jsonString);
             try{
+                matches.add(new Match(
+                        obj.getJSONObject("_id").getString("$oid"),
+                        obj.getInt("winner_rank"),
+                        obj.getInt("loser_rank"),
+                        obj.getInt("winner_age"),
+                        obj.getInt("w_ace"),
+                        obj.getInt("l_ace"),
+                        obj.getInt("w_df"),
+                        obj.getInt("l_df"),
+                        (float) obj.getInt("w_1stIn") / (float) obj.getInt("w_svpt") * 100,
+                        obj.getInt("winner_ht"),
+                        obj.getInt("minutes")
+                ));
+
                 winner_rank_values.add(new Value(obj.getInt("winner_rank"), obj.getJSONObject("_id").getString("$oid")));
                 loser_rank_values.add(new Value(obj.getInt("loser_rank"), obj.getJSONObject("_id").getString("$oid")));
                 winner_age_values.add(new Value(obj.getInt("winner_age"), obj.getJSONObject("_id").getString("$oid")));
@@ -52,8 +68,6 @@ public class DataParser {
             }
 
         });
-
-
 
         attributes.add(new Attribute("Ranking zwyciezcy",winner_rank_values,getMemberships().get(0)));
         attributes.add(new Attribute("Ranking przegranego",loser_rank_values,getMemberships().get(1)));
@@ -131,5 +145,7 @@ public class DataParser {
         memberships.get(9).add(new TrapezoidMembership("Bardzo dlugi",180,210,353,400 ));
         return memberships;
     }
+
+    public ArrayList<Match> getMatches(){return matches;}
 
 }

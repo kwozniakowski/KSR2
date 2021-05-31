@@ -1,6 +1,7 @@
 package Memberships;
 
 import Attributes.Attribute;
+import Attributes.Match;
 import Attributes.Value;
 import Qualifiers.Qualifier;
 import Quantifiers.Quantifier;
@@ -9,26 +10,31 @@ import Summarizer.Summarizer;
 import java.util.ArrayList;
 
 public class Measures {
-    public static double DegreeOfTruth(Quantifier quantifier, String linguisticDegree, Qualifier qualifier, Summarizer summarizer, Attribute a)
+    public static double DegreeOfTruth(Quantifier quantifier, Qualifier qualifier, Attribute attribute, Summarizer summarizer, ArrayList<Match> matches)
     {
         double rUp = 0;
         double rDown = 0;
 
-        for(Value v: a.getValues())
+        if(qualifier != null)
         {
-            rUp += Math.min(qualifier.getFuzzySet().getMembership().getDegree(v.getValue()), summarizer.getFuzzySet().getMembership().getDegree(v.getValue()));
-            rDown += qualifier.getFuzzySet().getMembership().getDegree(v.getValue());
-        }
-        System.out.println("rUP: " + rUp);
-        System.out.println("rDown: " + rDown);
-        for(Membership m: quantifier.getMemberships())
-        {
-            if(m.getName().equals(linguisticDegree))
+            for(Match m : matches)
             {
-                return m.getDegree((float) rUp / (float) rDown);
+                rUp += Math.min(qualifier.getMembership().getDegree(m.getMatchStat(qualifier.getName())),
+                        summarizer.getMembership().getDegree(m.getMatchStat(attribute.getName())));
+
+                rDown += qualifier.getMembership().getDegree(m.getMatchStat(qualifier.getName()));
             }
         }
-        return 0;
+        else
+        {
+            for(Match m : matches)
+            {
+                rUp += summarizer.getMembership().getDegree(m.getMatchStat(attribute.getName()));
+                rDown += 1;
+            }
+        }
+        if(quantifier.absolute) return quantifier.getMembership().getDegree((float) rUp );
+        return quantifier.getMembership().getDegree((float) rUp / (float) rDown);
 
     }
 

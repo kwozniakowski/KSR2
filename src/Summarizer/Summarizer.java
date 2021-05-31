@@ -1,15 +1,12 @@
 package Summarizer;
 
 import Attributes.FuzzySet;
+import Memberships.Membership;
 
-public class Summarizer {
-    private FuzzySet fuzzySet;
-    public Summarizer(FuzzySet fuzzySet)
+public class Summarizer extends FuzzySet{
+    public Summarizer(String name, Membership membership)
     {
-        this.fuzzySet = fuzzySet;
+        super(name, membership);
     }
 
-    public FuzzySet getFuzzySet() {
-        return fuzzySet;
-    }
 }
