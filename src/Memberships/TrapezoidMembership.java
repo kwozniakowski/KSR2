@@ -16,5 +16,9 @@ public class TrapezoidMembership extends Membership {
         else if(x >= d) return 0;
         else return 0;
     }
+    public double getCardinality()
+    {
+        return ((d-a) + (c - b)) / 2;
+    }
 
 }

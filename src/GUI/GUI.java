@@ -77,6 +77,34 @@ public class GUI {
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(generalModeRB.isSelected())
+                {
+                    for(int j=0; j<attributes.size(); j++)
+                    {
+                        for(int i=0; i<attributes.get(j).getFuzzySets().size(); i ++)
+                        {
+                            for(int k=0; k<quantifierCB.getModel().getSize();k++)
+                            {
+                                Summarizer summarizer = new Summarizer(attributes.get(j).getFuzzySets().get(i).getName(),
+                                        chooseMembership(
+                                                attributes.get(j).getName(),
+                                                attributes.get(j).getFuzzySets().get(i).getName()));
+
+                                Quantifier quantifier = new Quantifier(quantifierCB.getItemAt(k).toString(),
+                                        chooseMembership(
+                                                quantifierCB.getItemAt(k).toString()),chooseAbsolutity(quantifierCB.getItemAt(k).toString()));
+
+                                Attribute attribute = chooseAttribute(attributes.get(j).getName());
+                                //Attribute qualifierAttribute = chooseAttribute(qualifierSubjectCB.getSelectedItem().toString());
+
+                                SummaryGenerator summaryGenerator = new SummaryGenerator(quantifier, null, null,attribute,summarizer,matches);
+
+                                summaryGenerator.generateFirstFormSummary();
+                            }
+                        }
+                    }
+                }
+
                 Summarizer summarizer = new Summarizer(summarizerCB.getSelectedItem().toString(),
                         chooseMembership(
                                 attributesCB.getSelectedItem().toString(),
@@ -97,7 +125,44 @@ public class GUI {
         button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(generalModeRB.isSelected())
+                {
+                    for(int j=0; j<attributes.size(); j++)
+                    {
+                        for(int i=0; i<attributes.get(j).getFuzzySets().size(); i ++)
+                        {
+                            for(int k=0; k<quantifierCB.getModel().getSize();k++)
+                            {
+                                for(int l=0; l<attributes.size();l++)
+                                {
+                                    for(int m=0;m<attributes.get(l).getFuzzySets().size(); m ++)
+                                    {
+                                        Qualifier qualifier = new Qualifier((String) attributes.get(l).getFuzzySets().get(m).getName(),
+                                                chooseMembership(
+                                                        attributes.get(l).getName(),
+                                                        attributes.get(l).getFuzzySets().get(m).getName()));
+                                        Summarizer summarizer = new Summarizer(attributes.get(j).getFuzzySets().get(i).getName(),
+                                                chooseMembership(
+                                                        attributes.get(j).getName(),
+                                                        attributes.get(j).getFuzzySets().get(i).getName()));
 
+                                        Quantifier quantifier = new Quantifier(quantifierCB.getItemAt(k).toString(),
+                                                chooseMembership(
+                                                        quantifierCB.getItemAt(k).toString()),chooseAbsolutity(quantifierCB.getItemAt(k).toString()));
+
+                                        Attribute attribute = chooseAttribute(attributes.get(j).getName());
+                                        //Attribute qualifierAttribute = chooseAttribute(qualifierSubjectCB.getSelectedItem().toString());
+                                        Attribute qualifierAttribute = chooseAttribute(attributes.get(l).getName());
+                                        SummaryGenerator summaryGenerator = new SummaryGenerator(quantifier, qualifierAttribute,qualifier,attribute,summarizer,matches);
+
+                                        summaryGenerator.generateSecondFormSummary();
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
                 Qualifier qualifier = new Qualifier((String) qualifierSubjectCB.getSelectedItem().toString(),
                         chooseMembership(
                                 qualifierSubjectCB.getSelectedItem().toString(),
@@ -212,23 +277,23 @@ public class GUI {
         relativeQuantifiers = new ArrayList<>();
         relativeQuantifiers.add(new Quantifier( "Prawie zaden",new TrapezoidMembership("Prawie zaden",-1,0, 0.05f, (float) 0.1), false));
         relativeQuantifiers.add(new Quantifier( "Mniejszosc",new TrapezoidMembership("Mniejszosc", 0.05f, 0.1f, 0.2f, 0.25f),false));
-        relativeQuantifiers.add(new Quantifier( "Okolo 1/4", new TriangularMembership("Okolo 1/4", 0.2f, 0.25f, 0.25f, (float) 0.3),false));
-        relativeQuantifiers.add(new Quantifier( "Okolo 1/3", new TriangularMembership("Okolo 1/3", 0.25f, 0.33f, 0.33f, (float) 0.41),false));
+        relativeQuantifiers.add(new Quantifier( "Okolo 1/4", new TriangularMembership("Okolo 1/4", 0.2f, 0.25f,  (float) 0.3),false));
+        relativeQuantifiers.add(new Quantifier( "Okolo 1/3", new TriangularMembership("Okolo 1/3", 0.25f, 0.33f,  (float) 0.41),false));
         relativeQuantifiers.add(new Quantifier( "Okolo polowy",new TrapezoidMembership("Okolo polowy", 0.35f, 0.4f, 0.6f, (float) 0.65),false));
-        relativeQuantifiers.add(new Quantifier( "Okolo 2/3", new TriangularMembership("Okolo 2/3", 0.59f, 0.67f, 0.67f, (float) 0.75),false));
-        relativeQuantifiers.add(new Quantifier( "Okolo 3/4",new TriangularMembership("Okolo 3/4", 0.7f, 0.75f, 0.75f, (float) 0.8),false));
+        relativeQuantifiers.add(new Quantifier( "Okolo 2/3", new TriangularMembership("Okolo 2/3", 0.59f, 0.67f,  (float) 0.75),false));
+        relativeQuantifiers.add(new Quantifier( "Okolo 3/4",new TriangularMembership("Okolo 3/4", 0.7f, 0.75f,  (float) 0.8),false));
         relativeQuantifiers.add(new Quantifier( "Wiekszosc",new TrapezoidMembership("Wiekszosc", 0.75f,0.8f,0.9f,0.95f),false));
         relativeQuantifiers.add(new Quantifier( "Prawie wszystkie",new TrapezoidMembership("Prawie wszystkie", 0.9f, 0.95f, 1, (float) 1.2),false));
 
         absoluteQuantifiers = new ArrayList<>();
         absoluteQuantifiers.add(new Quantifier( "Mniej niz 100",new TrapezoidMembership("Mniej niz 100", -1, 0, 100,110) ,true));
-        absoluteQuantifiers.add(new Quantifier( "Okolo 200",new TriangularMembership("Okolo 200", 100,200,200,300) ,true ));
-        absoluteQuantifiers.add(new Quantifier( "Okolo 500",new TriangularMembership("Okolo 500", 250,500,500,750) ,true ));
-        absoluteQuantifiers.add(new Quantifier( "Okolo 1000",new TriangularMembership("Okolo 1000", 500,1000,1000,1600)  ,true));
-        absoluteQuantifiers.add(new Quantifier( "Okolo 2000",new TriangularMembership("Okolo 2000", 1500,2000,2000,2600) ,true ));
-        absoluteQuantifiers.add(new Quantifier( "Okolo 3000",new TriangularMembership("Okolo 3000", 2500,3000,3000,3600)  ,true));
-        absoluteQuantifiers.add(new Quantifier( "Okolo 4000",new TriangularMembership("Okolo 4000", 3500,4000,4000,4800) ,true ));
-        absoluteQuantifiers.add(new Quantifier( "Okolo 6000",new TriangularMembership("Okolo 6000", 4600,6000,6000,7400) ,true ));
+        absoluteQuantifiers.add(new Quantifier( "Okolo 200",new TriangularMembership("Okolo 200", 100,200,300) ,true ));
+        absoluteQuantifiers.add(new Quantifier( "Okolo 500",new TriangularMembership("Okolo 500", 250,500,750) ,true ));
+        absoluteQuantifiers.add(new Quantifier( "Okolo 1000",new TriangularMembership("Okolo 1000", 500,1000,1600)  ,true));
+        absoluteQuantifiers.add(new Quantifier( "Okolo 2000",new TriangularMembership("Okolo 2000", 1500,2000,2600) ,true ));
+        absoluteQuantifiers.add(new Quantifier( "Okolo 3000",new TriangularMembership("Okolo 3000", 2500,3000,3600)  ,true));
+        absoluteQuantifiers.add(new Quantifier( "Okolo 4000",new TriangularMembership("Okolo 4000", 3500,4000,4800) ,true ));
+        absoluteQuantifiers.add(new Quantifier( "Okolo 6000",new TriangularMembership("Okolo 6000", 4600,6000,7400) ,true ));
         absoluteQuantifiers.add(new Quantifier( "Ponad 8000",new TrapezoidMembership("Ponad 8000", 7200, 8000, 15000,16000)  ,true));
 
     }

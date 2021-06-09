@@ -38,7 +38,7 @@ public class SummaryGenerator {
     public void generateFirstFormSummary()
     {
         String result = "W " + quantifier.getName() + " meczów " + attribute.getName() + " był " + summarizer.getName();
-        System.out.println(result + " ["+ Measures.DegreeOfTruth(quantifier,qualifier,attribute,summarizer,matches) + "]");
+        System.out.println(result + " ["+ Measures.DegreeOfTruth(quantifier,qualifierAttribute,qualifier,attribute,summarizer,matches) + "]");
 
     }
     public void generateSecondFormSummary()
@@ -47,7 +47,9 @@ public class SummaryGenerator {
         String result = "W " + quantifier.getName() + " meczów, w ktorych "
                                 + qualifierAttribute.getName() + " był " + qualifier.getName() +", "
                                 + attribute.getName() + " był " + summarizer.getName();
-        System.out.println(result + " [" + Measures.DegreeOfTruth(quantifier,qualifier,attribute,summarizer,matches) + "]" );
+        double dof = Measures.DegreeOfTruth(quantifier,qualifierAttribute,qualifier,attribute,summarizer,matches);
+        //if(dof > 0.7)
+            System.out.println(result + " [" + dof + "]" );
 
     }
 

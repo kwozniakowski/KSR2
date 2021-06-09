@@ -11,11 +11,19 @@ public abstract class Membership {
         this.d = d;
         this.name = name;
     }
+    public Membership(String name,float a, float b, float c) {
+        this.a = a;
+        this.b = b;
+        this.c = c;
+        this.name = name;
+    }
 
     public String getName()
     {
         return this.name;
     }
+
+    public abstract double getCardinality();
 
     public abstract float getDegree(float x);
 }
