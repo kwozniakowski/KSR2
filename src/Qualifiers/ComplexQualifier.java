@@ -14,16 +14,30 @@ public class ComplexQualifier extends Qualifier{
         this.or = or;
     }
 
-    public Qualifier getMembership(double x, double y) {
+    public float getMembership(double x, double y) {
         if (or)
         {
-            if(q1.getMembership().getDegree((float) x) > q2.getMembership().getDegree((float) y)) return q1;
-            else return q2;
+            if(q1.getMembership().getDegree((float) x) > q2.getMembership().getDegree((float) y)) {
+                return q1.getMembership().getDegree((float) x);
+            }
+            else return q2.getMembership().getDegree((float) y);
         }
         else
         {
-            if(q1.getMembership().getDegree((float) x) < q2.getMembership().getDegree((float) y)) return q1;
-            else return q2;
+            if(q1.getMembership().getDegree((float) x) < q2.getMembership().getDegree((float) y))
+            {
+                return q1.getMembership().getDegree((float) x);
+            }
+
+            else return q2.getMembership().getDegree((float) y);
         }
+    }
+
+    public Qualifier getQ1() {
+        return q1;
+    }
+
+    public Qualifier getQ2() {
+        return q2;
     }
 }

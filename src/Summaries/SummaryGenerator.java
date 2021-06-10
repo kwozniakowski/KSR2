@@ -37,6 +37,7 @@ public class SummaryGenerator {
 
     public void generateFirstFormSummary()
     {
+        Summary s = new Summary(quantifier,qualifierAttribute,qualifier,attribute,summarizer,matches);
         String result = "W " + quantifier.getName() + " meczów " + attribute.getName() + " był " + summarizer.getName();
         System.out.println(result + " ["+ Measures.DegreeOfTruth(quantifier,qualifierAttribute,qualifier,attribute,summarizer,matches) + "]");
 

@@ -3,7 +3,6 @@ package Quantifiers;
 import Attributes.FuzzySet;
 import Attributes.Match;
 import Memberships.Membership;
-import Memberships.TriangularMembership;
 
 import java.util.ArrayList;
 
@@ -17,7 +16,7 @@ public class Quantifier extends FuzzySet {
     public ArrayList<Match> support(ArrayList<Match> matches) {
         ArrayList<Match> support = new ArrayList<>();
         for (Match m : matches) {
-            if (getMembership().getDegree(m.getMatchStat(getName())) > 0) {
+            if (getMembership().getDegree(m.getMatchAttribute(getName())) > 0) {
                 support.add(m);
             }
         }

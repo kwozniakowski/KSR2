@@ -69,7 +69,7 @@ public class Match {
         return minutes;
     }
 
-    public float getMatchStat(String name)
+    public float getMatchAttribute(String name)
     {
         if(name.equals("Ranking zwyciezcy")) return winner_rank;
         if(name.equals("Ranking przegranego")) return loser_rank;

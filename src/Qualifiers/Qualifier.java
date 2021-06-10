@@ -3,11 +3,9 @@ package Qualifiers;
 import Attributes.Attribute;
 import Attributes.FuzzySet;
 import Attributes.Match;
-import Attributes.Value;
 import Memberships.Membership;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Qualifier extends FuzzySet {
     private ArrayList<String> idsOfQualifiedValues;
@@ -31,7 +29,7 @@ public class Qualifier extends FuzzySet {
     public ArrayList<Match> support(ArrayList<Match> matches) {
         ArrayList<Match> support = new ArrayList<>();
         for (Match m : matches) {
-            if (getMembership().getDegree(m.getMatchStat(getName())) > 0) {
+            if (getMembership().getDegree(m.getMatchAttribute(getName())) > 0) {
                 support.add(m);
             }
         }
