@@ -7,6 +7,7 @@ import Memberships.TrapezoidMembership;
 import Memberships.TriangularMembership;
 import Qualifiers.Qualifier;
 import Quantifiers.Quantifier;
+import Summaries.Summary;
 import Summaries.SummaryGenerator;
 import Summarizer.Summarizer;
 
@@ -15,6 +16,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class GUI {
     private ArrayList<Attribute> attributes;
@@ -77,6 +79,7 @@ public class GUI {
         button1.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                ArrayList<Summary> summaries = new ArrayList<>();
                 if(generalModeRB.isSelected())
                 {
                     for(int j=0; j<attributes.size(); j++)
@@ -85,7 +88,7 @@ public class GUI {
                         {
                             for(int k=0; k<quantifierCB.getModel().getSize();k++)
                             {
-                                Summarizer summarizer = new Summarizer(attributes.get(j).getFuzzySets().get(i).getName(),
+                                Summarizer summarizer = new Summarizer(attributes.get(j).getName(),attributes.get(j).getFuzzySets().get(i).getName(),
                                         chooseMembership(
                                                 attributes.get(j).getName(),
                                                 attributes.get(j).getFuzzySets().get(i).getName()));
@@ -97,34 +100,44 @@ public class GUI {
                                 Attribute attribute = chooseAttribute(attributes.get(j).getName());
                                 //Attribute qualifierAttribute = chooseAttribute(qualifierSubjectCB.getSelectedItem().toString());
 
-                                SummaryGenerator summaryGenerator = new SummaryGenerator(quantifier, null, null,attribute,summarizer,matches);
-
-                                summaryGenerator.generateFirstFormSummary();
+                                SummaryGenerator summaryGenerator = new SummaryGenerator(quantifier, null,attribute,summarizer,matches);
+                                summaries.add(summaryGenerator.generateFirstFormSummary());
                             }
                         }
                     }
                 }
+                else
+                {
+                    Summarizer summarizer = new Summarizer(
+                            attributesCB.getSelectedItem().toString(),
+                            summarizerCB.getSelectedItem().toString(),
+                            chooseMembership(
+                                    attributesCB.getSelectedItem().toString(),
+                                    summarizerCB.getSelectedItem().toString()));
 
-                Summarizer summarizer = new Summarizer(summarizerCB.getSelectedItem().toString(),
-                        chooseMembership(
-                                attributesCB.getSelectedItem().toString(),
-                                summarizerCB.getSelectedItem().toString()));
+                    Quantifier quantifier = new Quantifier(quantifierCB.getSelectedItem().toString(),
+                            chooseMembership(
+                                    quantifierCB.getSelectedItem().toString()),chooseAbsolutity(quantifierCB.getSelectedItem().toString()));
 
-                Quantifier quantifier = new Quantifier(quantifierCB.getSelectedItem().toString(),
-                        chooseMembership(
-                                quantifierCB.getSelectedItem().toString()),chooseAbsolutity(quantifierCB.getSelectedItem().toString()));
+                    Attribute attribute = chooseAttribute(attributesCB.getSelectedItem().toString());
+                    Attribute qualifierAttribute = chooseAttribute(qualifierSubjectCB.getSelectedItem().toString());
 
-                Attribute attribute = chooseAttribute(attributesCB.getSelectedItem().toString());
-                Attribute qualifierAttribute = chooseAttribute(qualifierSubjectCB.getSelectedItem().toString());
+                    SummaryGenerator summaryGenerator = new SummaryGenerator(quantifier, null, attribute,summarizer,matches);
 
-                SummaryGenerator summaryGenerator = new SummaryGenerator(quantifier, null, null,attribute,summarizer,matches);
-
-                summaryGenerator.generateFirstFormSummary();
+                    summaryGenerator.generateFirstFormSummary();
+                }
+                for(Summary s:summaries)
+                {
+                    s.calculateMeasures(summaries);
+                }
+                Collections.sort(summaries);
+                for(Summary s:summaries) System.out.println(s.toString());
             }
         });
         button2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                ArrayList<Summary> summaries = new ArrayList<>();
                 if(generalModeRB.isSelected())
                 {
                     for(int j=0; j<attributes.size(); j++)
@@ -137,11 +150,11 @@ public class GUI {
                                 {
                                     for(int m=0;m<attributes.get(l).getFuzzySets().size(); m ++)
                                     {
-                                        Qualifier qualifier = new Qualifier((String) attributes.get(l).getFuzzySets().get(m).getName(),
+                                        Qualifier qualifier = new Qualifier(attributes.get(l).getName(), (String) attributes.get(l).getFuzzySets().get(m).getName(),
                                                 chooseMembership(
                                                         attributes.get(l).getName(),
                                                         attributes.get(l).getFuzzySets().get(m).getName()));
-                                        Summarizer summarizer = new Summarizer(attributes.get(j).getFuzzySets().get(i).getName(),
+                                        Summarizer summarizer = new Summarizer(attributes.get(j).getName(),attributes.get(j).getFuzzySets().get(i).getName(),
                                                 chooseMembership(
                                                         attributes.get(j).getName(),
                                                         attributes.get(j).getFuzzySets().get(i).getName()));
@@ -152,10 +165,9 @@ public class GUI {
 
                                         Attribute attribute = chooseAttribute(attributes.get(j).getName());
                                         //Attribute qualifierAttribute = chooseAttribute(qualifierSubjectCB.getSelectedItem().toString());
-                                        Attribute qualifierAttribute = chooseAttribute(attributes.get(l).getName());
-                                        SummaryGenerator summaryGenerator = new SummaryGenerator(quantifier, qualifierAttribute,qualifier,attribute,summarizer,matches);
+                                        SummaryGenerator summaryGenerator = new SummaryGenerator(quantifier,qualifier,attribute,summarizer,matches);
 
-                                        summaryGenerator.generateSecondFormSummary();
+                                        summaries.add(summaryGenerator.generateSecondFormSummary());
                                     }
                                 }
 
@@ -163,24 +175,39 @@ public class GUI {
                         }
                     }
                 }
-                Qualifier qualifier = new Qualifier((String) qualifierSubjectCB.getSelectedItem().toString(),
-                        chooseMembership(
-                                qualifierSubjectCB.getSelectedItem().toString(),
-                                qualifierSubjectLabelCB.getSelectedItem().toString()));
-                Summarizer summarizer = new Summarizer(summarizerCB.getSelectedItem().toString(),
-                        chooseMembership(
-                                attributesCB.getSelectedItem().toString(),
-                                summarizerCB.getSelectedItem().toString()));
+                else
+                {
+                    Qualifier qualifier = new Qualifier(
+                            attributesCB.getSelectedItem().toString(),
+                            (String) qualifierSubjectCB.getSelectedItem().toString(),
+                            chooseMembership(
+                                    qualifierSubjectCB.getSelectedItem().toString(),
+                                    qualifierSubjectLabelCB.getSelectedItem().toString()));
+                    Summarizer summarizer = new Summarizer(
+                            attributesCB.getSelectedItem().toString(),
+                            summarizerCB.getSelectedItem().toString(),
+                            chooseMembership(
+                                    attributesCB.getSelectedItem().toString(),
+                                    summarizerCB.getSelectedItem().toString()));
 
-                Quantifier quantifier = new Quantifier(quantifierCB.getSelectedItem().toString(),
-                        chooseMembership(
-                                quantifierCB.getSelectedItem().toString()), chooseAbsolutity(quantifierCB.getSelectedItem().toString()));
+                    Quantifier quantifier = new Quantifier(quantifierCB.getSelectedItem().toString(),
+                            chooseMembership(
+                                    quantifierCB.getSelectedItem().toString()), chooseAbsolutity(quantifierCB.getSelectedItem().toString()));
 
-                Attribute attribute = chooseAttribute(attributesCB.getSelectedItem().toString());
-                Attribute qualifierAttribute = chooseAttribute(qualifierSubjectCB.getSelectedItem().toString());
+                    Attribute attribute = chooseAttribute(attributesCB.getSelectedItem().toString());
+                    SummaryGenerator summaryGenerator = new SummaryGenerator(quantifier,qualifier,attribute,summarizer,matches);
 
-                SummaryGenerator summaryGenerator = new SummaryGenerator(quantifier,qualifierAttribute, qualifier,attribute,summarizer,matches);
-                summaryGenerator.generateSecondFormSummary();
+                    summaries.add(summaryGenerator.generateSecondFormSummary());
+                }
+                for(Summary s:summaries)
+                {
+                    s.calculateMeasures(summaries);
+                }
+                Collections.sort(summaries);
+                for(Summary s:summaries)
+                {
+                    System.out.println(s.toString());
+                }
             }
         });
 

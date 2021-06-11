@@ -13,7 +13,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Measures {
-    public static double DegreeOfTruth(Quantifier quantifier, Attribute qualifierAttribute, Qualifier qualifier, Attribute attribute, Summarizer summarizer, ArrayList<Match> matches)
+    private Quantifier quantifier;
+    private Attribute attribute;
+    private Qualifier qualifier;
+    private Summarizer summarizer;
+    private ArrayList<Match> matches;
+    ArrayList<Double> measures;
+
+    public Measures(Quantifier quantifier, Attribute attribute, Qualifier qualifier, Summarizer summarizer, ArrayList<Match> matches) {
+        this.quantifier = quantifier;
+        this.attribute = attribute;
+        this.qualifier = qualifier;
+        this.summarizer = summarizer;
+        this.matches = matches;
+        this.measures = new ArrayList<>();
+    }
+
+    public double DegreeOfTruth()
     {
         double rUp = 0;
         double rDown = 0;
@@ -23,10 +39,10 @@ public class Measures {
             for(Match m : matches)
             {
                 rUp += Math.min(
-                        qualifier.getMembership().getDegree(m.getMatchAttribute(qualifierAttribute.getName())),
-                        summarizer.getMembership().getDegree(m.getMatchAttribute(summarizer.getName())));
+                        qualifier.getMembership().getDegree(m.getMatchAttribute(qualifier.getAttributeName())),
+                        summarizer.getMembership().getDegree(m.getMatchAttribute(summarizer.getAttributeName())));
 
-                rDown += qualifier.getMembership().getDegree(m.getMatchAttribute(summarizer.getName()));
+                rDown += qualifier.getMembership().getDegree(m.getMatchAttribute(summarizer.getAttributeName()));
             }
             val = quantifier.getMembership().getDegree((float) (rUp/rDown));
         }
@@ -36,7 +52,7 @@ public class Measures {
             {
                 for(Match m: matches)
                 {
-                    rUp = rUp + summarizer.getMembership().getDegree(m.getMatchAttribute(summarizer.getName()));
+                    rUp = rUp + summarizer.getMembership().getDegree(m.getMatchAttribute(summarizer.getAttributeName()));
                 }
                 val = quantifier.getMembership().getDegree((float) rUp );
             }
@@ -44,7 +60,7 @@ public class Measures {
             {
                 for(Match m: matches)
                 {
-                    rUp = rUp + summarizer.getMembership().getDegree(m.getMatchAttribute(summarizer.getName()));
+                    rUp = rUp + summarizer.getMembership().getDegree(m.getMatchAttribute(summarizer.getAttributeName()));
 
                 }
                 val = quantifier.getMembership().getDegree((float) rUp / matches.size() );
@@ -54,32 +70,32 @@ public class Measures {
 
     }
 
-    public double T2(ArrayList<Match> matches, Summarizer summarizer){
+    public double T2(){
         double pom =1.0;
         pom *= summarizer.getFuzziness(matches);
         if (summarizer instanceof ComplexSummarizer)
         {
-            return 1 - Math.pow(pom,1.0 / summarizer.getSize());
+            return 1 - Math.pow(pom,1.0 / ((ComplexSummarizer) summarizer).getSummarizers().size());
         }
         return 1 - Math.pow(pom,1.0 / 1.0);
     }
 
-    public double T3(ArrayList<Match> matches, Qualifier qualifier, Attribute qualifierAttribute , Summarizer summarizer)
+    public double T3()
     {
         double s = 0;
         double q = 0;
         for(Match m : matches)
         {
             if (qualifier == null){
-                if (summarizer.getMembership().getDegree(m.getMatchAttribute(summarizer.getName())) > 0){
+                if (summarizer.getMembership().getDegree(m.getMatchAttribute(summarizer.getAttributeName())) > 0){
                     s++;
                 }
             }
             else
             {
-                if (qualifier.getMembership().getDegree(m.getMatchAttribute(qualifierAttribute.getName())) > 0){
+                if (qualifier.getMembership().getDegree(m.getMatchAttribute(qualifier.getAttributeName())) > 0){
                     q++;
-                    if (summarizer.getMembership().getDegree(m.getMatchAttribute(summarizer.getName())) > 0) {
+                    if (summarizer.getMembership().getDegree(m.getMatchAttribute(summarizer.getAttributeName())) > 0) {
                         s++;
                     }
                 }
@@ -89,41 +105,42 @@ public class Measures {
         if (qualifier == null){
             return s/ matches.size();
         } else {
-            return s / q;
+            if(q==0) return 0;
+            else return s / q;
         }
     }
-    public double T4(ArrayList<Match> matches, Summarizer summarizer)
+    public double T4()
     {
         double a = 1;
         double b = 0;
         for(Match m: matches)
         {
-            b = b + summarizer.getMembership().getDegree(m.getMatchAttribute(summarizer.getName()));
+            b = b + summarizer.getMembership().getDegree(m.getMatchAttribute(summarizer.getAttributeName()));
         }
         a = a * b/matches.size();
-        return Math.abs(a - T3(matches));
+        return Math.abs(a - T3());
 
     }
-    public double T5(List<Summary> summaries, Summarizer summarizer){
+    public double T5(){
         if (summarizer instanceof ComplexSummarizer){
-            return 2 * Math.pow(0.5,((ComplexSummarizer) summarizer).getSize());
+            return 2 * Math.pow(0.5,((ComplexSummarizer) summarizer).getSummarizers().size());
 
         } else {
             return 2 * Math.pow(0.5,1);
         }
     }
 
-    public double T6(ArrayList<Match> matches, Quantifier quantifier)
+    public double T6()
     {
         //Ponizej moze okazac sie zle, ale nie musi
-        double a = quantifier.support(matches).size();
+        double a = quantifier.support();
         if (quantifier.absolute){
             a = a / matches.size();
         }
         return 1 - a;
     }
 
-    public double T7(ArrayList<Match> matches, Quantifier quantifier)
+    public double T7()
     {
         if (quantifier.absolute)
         {
@@ -135,24 +152,25 @@ public class Measures {
         }
     }
 
-    public double T8(ArrayList<Match> matches, List<LinguisticSummary> linguisticSummaries, Summarizer summarizer){
+    public double T8(){
         double a = 1;
         if (summarizer instanceof ComplexSummarizer){
             a *= ((ComplexSummarizer) summarizer).getMembership().getCardinality();
             System.out.println(a);
-            return 1.0 - Math.pow(a,1.0/((ComplexSummarizer) summarizer).size());
+            return 1.0 - Math.pow(a,1.0/((ComplexSummarizer) summarizer).getSummarizers().size());
         } else {
             a *= summarizer.getMembership().getCardinality() / matches.size();
             return 1.0 - Math.pow(a,1);
         }
     }
 
-    public double T9(ArrayList<Match> matches, Qualifier qualifier){
+    public double T9()
+    {
         if(qualifier != null) return 1.0 - qualifier.getFuzziness(matches);
         else return 0;
     }
 
-    public double T10(ArrayList<Match> matches, Qualifier qualifier)
+    public double T10()
     {
         if (qualifier == null){
             return 0.0;
@@ -163,40 +181,39 @@ public class Measures {
         return 1.0 - qualifier.getMembership().getCardinality() / matches.size();
     }
 
-    public double T11(ArrayList<Summary> summaries, Qualifier qualifier){
+    public double T11(){
         if (qualifier == null){
             return 0.0;
         }
         if (qualifier instanceof ComplexQualifier){
-            return 2 * Math.pow(0.5,((ComplexQualifier) qualifier).getSize());
+            return 2 * Math.pow(0.5,((ComplexQualifier) qualifier).getQualifiers().size());
         } else {
             return 2 * Math.pow(0.5,1);
         }
     }
 
-    public ArrayList<Double> calculateMeasures(ArrayList<Summary> summaries, ArrayList<Match> matches,
-                                               Attribute qualifierAttribute, Qualifier qualifier, Quantifier quantifier,
-                                               Summarizer summarizer, Attribute attribute){
-        ArrayList<Double> measures = new ArrayList<>();
-        measures.add(DegreeOfTruth(quantifier,qualifierAttribute,qualifier,attribute,summarizer,matches));
-        measures.add(T2(matches,summaries));
-        measures.add(T3(matches, qualifier, summarizer));
-        measures.add(T4(matches,summaries));
-        measures.add(T5(summaries,summarizer));
-        measures.add(T6(matches,quantifier));
-        measures.add(T7(matches,quantifier));
-        measures.add(T8(matches, summaries,summarizer));
-        measures.add(T9(matches,summaries));
-        measures.add(T10(matches,qualifier));
-        measures.add(T11(summaries,qualifier));
-        measures.forEach(System.out::println);
+    public double calculateMeasures(ArrayList<Summary> summaries){
+
+        measures.add(DegreeOfTruth());
+        measures.add(T2());
+        measures.add(T3());
+        measures.add(T4());
+        measures.add(T5());
+        measures.add(T6());
+        measures.add(T7());
+        measures.add(T8());
+        measures.add(T9());
+        measures.add(T10());
+        measures.add(T11());
         double a = 0;
         for (Double m : measures)
         {
             a = a + ( (1.0 / 11) * m);
         }
-        return measures;
+        return a;
     }
+
+    public ArrayList<Double> getMeasures(){return measures;}
 
 
 }

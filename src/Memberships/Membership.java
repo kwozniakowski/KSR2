@@ -24,6 +24,7 @@ public abstract class Membership {
     }
 
     public abstract double getCardinality();
+    public abstract double getSupport();
 
     public abstract float getDegree(float x);
 }

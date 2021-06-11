@@ -20,5 +20,6 @@ public class TrapezoidMembership extends Membership {
     {
         return ((d-a) + (c - b)) / 2;
     }
+    public double getSupport() {return d-a;}
 
 }

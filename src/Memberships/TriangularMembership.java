@@ -25,5 +25,6 @@ public class TriangularMembership extends Membership {
     {
         return this.name;
     }
+    public double getSupport() {return c -a;}
 }
 

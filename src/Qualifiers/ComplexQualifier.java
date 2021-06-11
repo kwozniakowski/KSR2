@@ -1,43 +1,41 @@
 package Qualifiers;
 
+import Attributes.Match;
 import Memberships.Membership;
+import Quantifiers.Quantifier;
+import Summarizer.Summarizer;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class ComplexQualifier extends Qualifier{
-    private Qualifier q1;
-    private Qualifier q2;
+    private ArrayList<Qualifier> qualifiers;
     private boolean or;
 
-    public ComplexQualifier(String name, Membership membership, Qualifier q1, Qualifier q2, boolean or) {
-        super(name, membership);
-        this.q1 = q1;
-        this.q2 = q2;
+    public ComplexQualifier(String attributeName, String name, Membership membership, ArrayList<Qualifier> qualifiers, boolean or) {
+        super(attributeName, name, membership);
+        this.qualifiers = qualifiers;
         this.or = or;
     }
-
-    public float getMembership(double x, double y) {
+    public double getMembership(Match match)
+    {
+        ArrayList<Double> values = new ArrayList<>();
+        for (Qualifier q: qualifiers){
+            values.add((double) q.getMembership().getDegree(match.getMatchAttribute(q.getAttributeName())));
+        }
+        Collections.sort(values);
         if (or)
         {
-            if(q1.getMembership().getDegree((float) x) > q2.getMembership().getDegree((float) y)) {
-                return q1.getMembership().getDegree((float) x);
-            }
-            else return q2.getMembership().getDegree((float) y);
+            return values.get(values.size()-1);
         }
         else
         {
-            if(q1.getMembership().getDegree((float) x) < q2.getMembership().getDegree((float) y))
-            {
-                return q1.getMembership().getDegree((float) x);
-            }
-
-            else return q2.getMembership().getDegree((float) y);
+            return values.get(0);
         }
     }
 
-    public Qualifier getQ1() {
-        return q1;
-    }
-
-    public Qualifier getQ2() {
-        return q2;
+    public ArrayList<Qualifier> getQualifiers()
+    {
+        return qualifiers;
     }
 }

@@ -15,7 +15,7 @@ public class Attribute {
         this.fuzzySets = new ArrayList<>();
         for(Membership m: memberships)
         {
-            this.fuzzySets.add(new FuzzySet(m.getName(), m));
+            this.fuzzySets.add(new FuzzySet(name, m.getName(), m));
         }
     }
 

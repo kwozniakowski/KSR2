@@ -15,9 +15,9 @@ public class Qualifier extends FuzzySet {
     private ArrayList<Attribute> attributes;
     private Membership membership;
 
-    public Qualifier(String name, Membership membership)
+    public Qualifier(String attributeName, String name, Membership membership)
     {
-        super(name, membership);
+        super(attributeName, name, membership);
 
     }
 
@@ -29,7 +29,7 @@ public class Qualifier extends FuzzySet {
     public ArrayList<Match> support(ArrayList<Match> matches) {
         ArrayList<Match> support = new ArrayList<>();
         for (Match m : matches) {
-            if (getMembership().getDegree(m.getMatchAttribute(getName())) > 0) {
+            if (getMembership().getDegree(m.getMatchAttribute(getAttributeName())) > 0) {
                 support.add(m);
             }
         }

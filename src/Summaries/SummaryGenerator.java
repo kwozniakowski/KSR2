@@ -24,10 +24,9 @@ public class SummaryGenerator {
     private Attribute qualifierAttribute;
     private ArrayList<Match> matches;
 
-    public SummaryGenerator(Quantifier quantifier, Attribute qualifierAttribute, Qualifier qualifier,
+    public SummaryGenerator(Quantifier quantifier, Qualifier qualifier,
                             Attribute attribute, Summarizer summarizer, ArrayList<Match> matches)
     {
-        this.qualifierAttribute = qualifierAttribute;
         this.qualifier = qualifier;
         this.summarizer = summarizer;
         this.quantifier =quantifier;
@@ -35,23 +34,17 @@ public class SummaryGenerator {
         this.matches = matches;
     }
 
-    public void generateFirstFormSummary()
+    public Summary generateFirstFormSummary()
     {
         Summary s = new Summary(quantifier,qualifierAttribute,qualifier,attribute,summarizer,matches);
-        String result = "W " + quantifier.getName() + " meczów " + attribute.getName() + " był " + summarizer.getName();
-        System.out.println(result + " ["+ Measures.DegreeOfTruth(quantifier,qualifierAttribute,qualifier,attribute,summarizer,matches) + "]");
+
+        return s;
 
     }
-    public void generateSecondFormSummary()
+    public Summary generateSecondFormSummary()
     {
-
-        String result = "W " + quantifier.getName() + " meczów, w ktorych "
-                                + qualifierAttribute.getName() + " był " + qualifier.getName() +", "
-                                + attribute.getName() + " był " + summarizer.getName();
-        double dof = Measures.DegreeOfTruth(quantifier,qualifierAttribute,qualifier,attribute,summarizer,matches);
-        //if(dof > 0.7)
-            System.out.println(result + " [" + dof + "]" );
-
+        Summary s = new Summary(quantifier,qualifierAttribute,qualifier,attribute,summarizer,matches);
+        return s;
     }
 
 }
