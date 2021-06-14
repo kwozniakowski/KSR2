@@ -5,12 +5,12 @@ import Attributes.Match;
 import Qualifiers.ComplexQualifier;
 import Qualifiers.Qualifier;
 import Quantifiers.Quantifier;
-import Summaries.Summary;
+import Summaries.FirstDegreeSummary;
+import Summaries.SecondDegreeSummary;
 import Summarizer.Summarizer;
 import Summarizer.ComplexSummarizer;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Measures {
     private Quantifier quantifier;
@@ -28,6 +28,8 @@ public class Measures {
         this.matches = matches;
         this.measures = new ArrayList<>();
     }
+
+    public Measures(){};
 
     public double DegreeOfTruth()
     {
@@ -192,25 +194,45 @@ public class Measures {
         }
     }
 
-    public double calculateMeasures(ArrayList<Summary> summaries){
+    public double T(SecondDegreeSummary s)
+    {
+        if (s.getForm() == 1 || s.getForm() == 2 || s.getForm() == 3)
+        {
+            double rUp = s.getMatches1Cardinality() / s.getMatches1().size();
+            double rDown = s.getMatches1Cardinality() / s.getMatches1().size() + s.getMatches2Cardinality() / s.getMatches2().size();
+            return s.getQuantifier().getMembership().getDegree((float) (rUp / rDown));
+        }
+        else
+        {
+            double rUp = s.getMatches1Cardinality();
+            double rDown = s.getMatches1Cardinality() + s.getMatches2Cardinality();
+            return rUp /rDown;
+        }
+    }
 
-        measures.add(DegreeOfTruth());
-        measures.add(T2());
-        measures.add(T3());
-        measures.add(T4());
-        measures.add(T5());
-        measures.add(T6());
-        measures.add(T7());
-        measures.add(T8());
-        measures.add(T9());
-        measures.add(T10());
-        measures.add(T11());
-        double a = 0;
+    public double calculateMeasures(ArrayList<FirstDegreeSummary> summaries){
+
+        measures.add(T2());//0.06
+        measures.add(T3());//0.06
+        measures.add(T4());//0.06
+        measures.add(T5());//0.06
+        measures.add(T6());//0.06
+        measures.add(T7());//0.06
+        measures.add(T8());//0.06
+        measures.add(T9());//0.06
+        measures.add(T10());//0.06
+        measures.add(T11());//0.06
+        double a = 4.0 * DegreeOfTruth()/10;//0.4
         for (Double m : measures)
         {
-            a = a + ( (1.0 / 11) * m);
+            a = a + ( (6.0 / 100) * m);
         }
         return a;
+    }
+
+    public double calculateMeasures(SecondDegreeSummary summary){
+
+        return T(summary);
     }
 
     public ArrayList<Double> getMeasures(){return measures;}

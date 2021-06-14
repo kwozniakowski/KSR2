@@ -9,7 +9,7 @@ import Summarizer.Summarizer;
 
 import java.util.ArrayList;
 
-public class Summary implements Comparable<Summary> {
+public class FirstDegreeSummary implements Comparable<FirstDegreeSummary> {
     private Quantifier quantifier;
     private Attribute attribute;
     private Attribute qualifierAttribute;
@@ -19,8 +19,8 @@ public class Summary implements Comparable<Summary> {
     private Double measure;
     private Measures measuresModule;
 
-    public Summary(Quantifier quantifier, Attribute qualifierAttribute, Qualifier qualifier,
-                   Attribute attribute, Summarizer summarizer, ArrayList<Match> matches) {
+    public FirstDegreeSummary(Quantifier quantifier, Attribute qualifierAttribute, Qualifier qualifier,
+                              Attribute attribute, Summarizer summarizer, ArrayList<Match> matches) {
         this.qualifierAttribute = qualifierAttribute;
         this.qualifier = qualifier;
         this.summarizer = summarizer;
@@ -50,7 +50,7 @@ public class Summary implements Comparable<Summary> {
 
     public Measures getMeasuresModule() {return measuresModule;}
 
-    public void calculateMeasures(ArrayList<Summary> summaries)
+    public void calculateMeasures(ArrayList<FirstDegreeSummary> summaries)
     {
         this.measuresModule = new Measures(quantifier,attribute,qualifier,summarizer,matches);
         this.measure = measuresModule.calculateMeasures(summaries);
@@ -74,7 +74,7 @@ public class Summary implements Comparable<Summary> {
     public Double getMeasure() {return measure;}
 
     @Override
-    public int compareTo(Summary s)
+    public int compareTo(FirstDegreeSummary s)
     {
         return this.getMeasure().compareTo(s.getMeasure());
     }

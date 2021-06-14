@@ -14,8 +14,11 @@ public class Match {
     private float w_1stIn;
     private float winner_ht;
     private float minutes;
+    private String surface;
 
-    public Match(String id, float winner_rank, float loser_rank, float winner_age, float w_ace, float l_ace, float w_df, float l_df, float w_1stIn, float winner_ht, float minutes) {
+    public Match(String id, float winner_rank, float loser_rank, float winner_age,
+                 float w_ace, float l_ace, float w_df, float l_df, float w_1stIn,
+                 float winner_ht, float minutes, String surface) {
         this.id = id;
         this.winner_rank = winner_rank;
         this.loser_rank = loser_rank;
@@ -27,6 +30,7 @@ public class Match {
         this.w_1stIn = w_1stIn;
         this.winner_ht = winner_ht;
         this.minutes = minutes;
+        this.surface = surface;
     }
 
     public float getWinner_rank() {
@@ -68,6 +72,8 @@ public class Match {
     public float getMinutes() {
         return minutes;
     }
+
+    public String getSurface() {return surface;}
 
     public float getMatchAttribute(String name)
     {

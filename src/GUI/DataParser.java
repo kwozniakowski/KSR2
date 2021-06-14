@@ -49,7 +49,8 @@ public class DataParser {
                         obj.getInt("l_df"),
                         (float) obj.getInt("w_1stIn") / (float) obj.getInt("w_svpt") * 100,
                         obj.getInt("winner_ht"),
-                        obj.getInt("minutes")
+                        obj.getInt("minutes"),
+                        obj.getString("surface")
                 ));
 
                 winner_rank_values.add(new Value(obj.getInt("winner_rank"), obj.getJSONObject("_id").getString("$oid")));
@@ -147,5 +148,39 @@ public class DataParser {
     }
 
     public ArrayList<Match> getMatches(){return matches;}
+
+    public ArrayList<ArrayList<Match>> getMatchesBySurface()
+    {
+        ArrayList<String> names;
+        names = new ArrayList<>();
+        ArrayList<ArrayList<Match>> returned = new ArrayList<>();
+        for(Match m : matches)
+        {
+            if(!names.contains(m.getSurface()))
+            {
+                names.add(m.getSurface());
+            }
+        }
+        for(int i = 0; i < names.size(); i++)
+        {
+            returned.add(new ArrayList<>());
+        }
+        for(Match m : matches)
+        {
+            for(int i =0; i < names.size(); i ++)
+            {
+                if(m.getSurface().equals(names.get(i)))
+                {
+                    returned.get(i).add(m);
+                }
+            }
+        }
+        System.out.println(returned.get(0).get(0).getSurface());
+        System.out.println(returned.get(1).get(0).getSurface());
+        System.out.println(returned.get(2).get(0).getSurface());
+        System.out.println(returned.get(3).get(0).getSurface());
+        return returned;
+
+    }
 
 }
