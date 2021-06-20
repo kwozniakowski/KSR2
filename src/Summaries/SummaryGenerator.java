@@ -47,14 +47,14 @@ public class SummaryGenerator {
 
     public FirstDegreeSummary generateFirstFormSummary()
     {
-        FirstDegreeSummary s = new FirstDegreeSummary(quantifier,qualifierAttribute,qualifier,attribute,summarizer,matches);
+        FirstDegreeSummary s = new FirstDegreeSummary(quantifier,qualifier,attribute,summarizer,matches);
 
         return s;
 
     }
     public FirstDegreeSummary generateSecondFormSummary()
     {
-        FirstDegreeSummary s = new FirstDegreeSummary(quantifier,qualifierAttribute,qualifier,attribute,summarizer,matches);
+        FirstDegreeSummary s = new FirstDegreeSummary(quantifier,qualifier,attribute,summarizer,matches);
         return s;
     }
     public SecondDegreeSummary generateSecondDegreeSummary()

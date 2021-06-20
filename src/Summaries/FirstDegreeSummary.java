@@ -12,16 +12,14 @@ import java.util.ArrayList;
 public class FirstDegreeSummary implements Comparable<FirstDegreeSummary> {
     private Quantifier quantifier;
     private Attribute attribute;
-    private Attribute qualifierAttribute;
     private Qualifier qualifier;
     private Summarizer summarizer;
     private ArrayList<Match> matches;
     private Double measure;
     private Measures measuresModule;
 
-    public FirstDegreeSummary(Quantifier quantifier, Attribute qualifierAttribute, Qualifier qualifier,
+    public FirstDegreeSummary(Quantifier quantifier, Qualifier qualifier,
                               Attribute attribute, Summarizer summarizer, ArrayList<Match> matches) {
-        this.qualifierAttribute = qualifierAttribute;
         this.qualifier = qualifier;
         this.summarizer = summarizer;
         this.quantifier = quantifier;
@@ -42,10 +40,6 @@ public class FirstDegreeSummary implements Comparable<FirstDegreeSummary> {
 
     public Attribute getAttribute() {
         return attribute;
-    }
-
-    public Attribute getQualifierAttribute() {
-        return qualifierAttribute;
     }
 
     public Measures getMeasuresModule() {return measuresModule;}

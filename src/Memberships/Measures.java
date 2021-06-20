@@ -46,7 +46,13 @@ public class Measures {
 
                 rDown += qualifier.getMembership().getDegree(m.getMatchAttribute(summarizer.getAttributeName()));
             }
-            val = quantifier.getMembership().getDegree((float) (rUp/rDown));
+            if(quantifier.absolute){
+                val = quantifier.getMembership().getDegree((float) (rUp));
+            }
+            else
+            {
+                val = quantifier.getMembership().getDegree((float) (rUp/rDown));
+            }
         }
         else
         {
@@ -134,7 +140,6 @@ public class Measures {
 
     public double T6()
     {
-        //Ponizej moze okazac sie zle, ale nie musi
         double a = quantifier.support();
         if (quantifier.absolute){
             a = a / matches.size();

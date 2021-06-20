@@ -200,8 +200,8 @@ public class GUI {
                 else
                 {
                     Qualifier qualifier = new Qualifier(
-                            attributesCB.getSelectedItem().toString(),
-                            (String) qualifierSubjectCB.getSelectedItem().toString(),
+                            qualifierSubjectCB.getSelectedItem().toString(),
+                            (String) qualifierSubjectLabelCB.getSelectedItem().toString(),
                             chooseMembership(
                                     qualifierSubjectCB.getSelectedItem().toString(),
                                     qualifierSubjectLabelCB.getSelectedItem().toString()));
@@ -336,8 +336,8 @@ public class GUI {
                 else
                 {
                     Qualifier qualifier = new Qualifier(
-                            attributesCB.getSelectedItem().toString(),
-                            (String) qualifierSubjectCB.getSelectedItem().toString(),
+                            qualifierSubjectCB.getSelectedItem().toString(),
+                            (String) qualifierSubjectLabelCB.getSelectedItem().toString(),
                             chooseMembership(
                                     qualifierSubjectCB.getSelectedItem().toString(),
                                     qualifierSubjectLabelCB.getSelectedItem().toString()));
